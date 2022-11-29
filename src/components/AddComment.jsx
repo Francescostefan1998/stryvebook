@@ -1,14 +1,15 @@
-import { Component } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Component } from "react";
+import { Button, Form } from "react-bootstrap";
+import BookList from "./BookList";
 
 class AddComment extends Component {
   state = {
     comment: {
-      comment: '',
+      comment: "",
       rate: 1,
       elementId: null,
     },
-  }
+  };
 
   componentDidUpdate(prevProps) {
     if (prevProps.asin !== this.props.asin) {
@@ -17,36 +18,36 @@ class AddComment extends Component {
           ...this.state.comment,
           elementId: this.props.asin,
         },
-      })
+      });
     }
   }
 
   sendComment = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       let response = await fetch(
-        'https://striveschool-api.herokuapp.com/api/comments',
+        "https://striveschool-api.herokuapp.com/api/comments",
         {
-          method: 'POST',
+          method: "POST",
           body: JSON.stringify(this.state.comment),
           headers: {
-            'Content-type': 'application/json',
+            "Content-type": "application/json",
             Authorization:
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGI3OWY5NTgxNmI1YjAwMTU5NDA3NDAiLCJpYXQiOjE2MjI2NDY2NzcsImV4cCI6MTYyMzg1NjI3N30.y-rBwB5WAQOWBvWrLlAgTQUrbGulxd2M6cWH3VLyGLw',
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzdmNWNmYWQ4MzkzNTAwMTVlOGM0YTUiLCJpYXQiOjE2NjkyOTEyNTksImV4cCI6MTY3MDUwMDg1OX0.R9fOcNdfbqF-E06umapRM0bFhO6l1qqyZMtvrBY5C4I",
           },
         }
-      )
+      );
       if (response.ok) {
         // the comment has been sent succesfully!!
-        alert('Comment was sent!')
+        alert("Comment was sent!");
       } else {
-        console.log('error')
-        alert('something went wrong')
+        console.log("error");
+        alert("something went wrong");
       }
     } catch (error) {
-      console.log('error')
+      console.log("error");
     }
-  }
+  };
 
   render() {
     return (
@@ -94,8 +95,8 @@ class AddComment extends Component {
           </Button>
         </Form>
       </div>
-    )
+    );
   }
 }
 
-export default AddComment
+export default AddComment;

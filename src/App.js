@@ -14,6 +14,7 @@ function App() {
         {/* <MyBadge text="NEW!!" color="info" /> */}
         {/* <SingleBook book={fantasyBooks[0]} /> */}
         <BookList books={fantasyBooks} />
+        {console.log(fantasyBooks)}
       </header>
     </div>
   );

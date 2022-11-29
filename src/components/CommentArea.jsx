@@ -1,61 +1,56 @@
-import { Component } from 'react'
-import CommentList from './CommentList'
-import AddComment from './AddComment'
-import Loading from './Loading'
-import Error from './Error'
+import CommentList from "./CommentList";
+import AddComment from "./AddComment";
+import Loading from "./Loading";
+import Error from "./Error";
+import { useState, useEffect, usePrevious } from "react";
 
-class CommentArea extends Component {
-  state = {
-    comments: [], // comments will go here
-    isLoading: false,
-    isError: false,
-  }
+const CommentArea = ({ asin }) => {
+  console.log(asin);
+  const [comments, setcomments] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
+  const [isError, setisError] = useState(false);
 
-  componentDidUpdate = async (prevProps) => {
-    if (prevProps.asin !== this.props.asin) {
-      this.setState({
-        isLoading: true,
-      })
-      try {
-        let response = await fetch(
-          'https://striveschool-api.herokuapp.com/api/comments/' +
-            this.props.asin,
-          {
-            headers: {
-              Authorization:
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGI3OWY5NTgxNmI1YjAwMTU5NDA3NDAiLCJpYXQiOjE2MjI2NDY2NzcsImV4cCI6MTYyMzg1NjI3N30.y-rBwB5WAQOWBvWrLlAgTQUrbGulxd2M6cWH3VLyGLw',
-            },
-          }
-        )
-        console.log(response)
-        if (response.ok) {
-          let comments = await response.json()
-          this.setState({
-            comments: comments,
-            isLoading: false,
-            isError: false,
-          })
-        } else {
-          console.log('error')
-          this.setState({ isLoading: false, isError: true })
+  const fetchit = async () => {
+    try {
+      let response = await fetch(
+        `https://striveschool-api.herokuapp.com/api/comments/${asin}`,
+        {
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzdmNWNmYWQ4MzkzNTAwMTVlOGM0YTUiLCJpYXQiOjE2NjkyOTEyNTksImV4cCI6MTY3MDUwMDg1OX0.R9fOcNdfbqF-E06umapRM0bFhO6l1qqyZMtvrBY5C4I",
+          },
         }
-      } catch (error) {
-        console.log(error)
-        this.setState({ isLoading: false, isError: true })
+      );
+      console.log(response);
+      if (response.ok) {
+        let comments = await response.json();
+        setcomments(comments);
+        setisLoading(false);
+        setisError(false);
+      } else {
+        console.log("error");
+        setisLoading(false);
+        setisError(true);
       }
+    } catch (error) {
+      console.log(error);
+      setisLoading(false);
+      setisError(true);
     }
-  }
+  };
+  useEffect(() => {
+    console.log("use effect FIRED!");
+    fetchit();
+  });
 
-  render() {
-    return (
-      <div>
-        {this.state.isLoading && <Loading />}
-        {this.state.isError && <Error />}
-        <AddComment asin={this.props.asin} />
-        <CommentList commentsToShow={this.state.comments} />
-      </div>
-    )
-  }
-}
+  return (
+    <div>
+      {isLoading && <Loading />}
+      {isError && <Error />}
+      <AddComment asin={asin} />
+      <CommentList commentsToShow={comments} />
+    </div>
+  );
+};
 
-export default CommentArea
+export default CommentArea;
