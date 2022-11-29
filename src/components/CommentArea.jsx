@@ -41,7 +41,7 @@ const CommentArea = ({ asin }) => {
   useEffect(() => {
     console.log("use effect FIRED!");
     fetchit();
-  });
+  }, [asin]);
 
   return (
     <div>
